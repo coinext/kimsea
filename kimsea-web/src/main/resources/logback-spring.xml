@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property resource="application.properties"/>
+    <property resource="application-${spring.profiles.active:-local}.properties"/>
+
+    <!-- Appenders -->
+    <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyMMdd HH:mm:ss.SSS} %highlight(%-5level) [%thread] %green(%logger{35}):%line - %magenta(%msg) %n</pattern> <!--%date-->
+        </encoder> <!--[%thread] -->
+        <withJansi>true</withJansi>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${log.file.path}/${spring.application.name}_%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%date %level [%thread] %logger{35}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="BID" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${log.file.path}/${spring.application.name}_trade_%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%date %level [%thread] %logger{35}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DEPOSIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${log.file.path}/${spring.application.name}_deposit_%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%date %level [%thread] %logger{35}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WITHDRAW" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${log.file.path}/${spring.application.name}_withdraw_%d{yyyyMMdd}.log</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>%date %level [%thread] %logger{35}:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_DEPOSIT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="DEPOSIT" />
+    </appender>
+
+    <appender name="ASYNC_WITHDRAW" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="WITHDRAW" />
+    </appender>
+
+    <appender name="ASYNC_BID" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="BID" />
+    </appender>
+
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <logger name="BID" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_BID"/>
+    </logger>
+
+    <logger name="DEPOSIT" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_DEPOSIT"/>
+    </logger>
+
+    <logger name="WITHDRAW" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_WITHDRAW"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root level="${logback.level}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_FILE"/>
+        <springProfile name="localproduction,production">
+            <appender-ref ref="SENTRY"/>
+        </springProfile>
+    </root>
+</configuration>
