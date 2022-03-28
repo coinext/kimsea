@@ -4,13 +4,21 @@ kimsea is nft market (open source)
 
 * 기술 스텟
 KOTLIN
+
 MYSQL
+
 IPFS
+
 BLOCKCHAIN
+
 INFURA.IO
+
 ANDROID
+
 VUEJS
+
 JQUERY
+
 
 
 데모 사이트  : https://kimsea.me
