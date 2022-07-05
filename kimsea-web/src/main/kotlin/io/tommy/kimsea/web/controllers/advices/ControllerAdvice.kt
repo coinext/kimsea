@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
 
-@ControllerAdvice(basePackages = ["io.tommy.bluesea.web.controllers"])
+@ControllerAdvice(basePackages = ["io.tommy.kimsea.web.controllers"])
 @Order(1)
 class ControllerAdvice() {
     val log = logger()
